@@ -79,6 +79,11 @@ body {
     gap: 8px;
 }
 
+.contact-bar .icon {
+    vertical-align: -2px;
+    margin-right: 4px;
+}
+
 .contact-bar a {
     color: var(--color-text);
     text-decoration: none;
