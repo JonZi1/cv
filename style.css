@@ -341,28 +341,180 @@ body {
 
 /* ===== Print Styles ===== */
 @media print {
-    body {
-        background: white;
+    /* Force light theme colors */
+    :root {
+        --color-bg: #ffffff;
+        --color-surface: #ffffff;
+        --color-text: #1a1a2e;
+        --color-text-muted: #4a5568;
+        --color-accent: #2563eb;
+        --color-accent-light: #e8f0fe;
+        --color-border: #d1d5db;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    @page {
+        margin: 0.75in;
+        size: A4;
+    }
+
+    html, body {
+        background: white !important;
+        font-size: 11pt;
+        line-height: 1.4;
+    }
+
+    .action-buttons {
+        display: none !important;
     }
 
     .container {
         max-width: 100%;
         padding: 0;
+        margin: 0;
+    }
+
+    .header {
+        padding: 0 0 20px 0;
+        margin-bottom: 10px;
+    }
+
+    .name {
+        font-size: 24pt;
+        margin-bottom: 4px;
+    }
+
+    .title {
+        font-size: 12pt;
+        margin-bottom: 6px;
+    }
+
+    .tagline {
+        font-size: 10pt;
+        margin-bottom: 12px;
+    }
+
+    .contact-bar {
+        gap: 4px;
+    }
+
+    .contact-bar a {
+        font-size: 9pt;
+        padding: 2px 6px;
+    }
+
+    .contact-bar .divider {
+        margin: 0 2px;
     }
 
     .section {
-        box-shadow: none;
-        border: none;
+        background: white !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-top: 1px solid var(--color-border) !important;
+        border-radius: 0;
+        padding: 16px 0;
+        margin-bottom: 0;
         page-break-inside: avoid;
     }
 
-    .skill-tag:hover {
-        background-color: var(--color-accent-light);
-        color: var(--color-accent);
-        transform: none;
+    .section-title {
+        font-size: 10pt;
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--color-accent-light);
     }
 
-    .action-buttons {
-        display: none;
+    .about-text {
+        font-size: 10pt;
+        line-height: 1.5;
+    }
+
+    .entry {
+        margin-bottom: 14px;
+        page-break-inside: avoid;
+    }
+
+    .entry-header {
+        margin-bottom: 6px;
+    }
+
+    .entry-title {
+        font-size: 11pt;
+    }
+
+    .entry-subtitle {
+        font-size: 9pt;
+    }
+
+    .entry-date {
+        font-size: 8pt;
+        padding: 2px 8px;
+        background: #f3f4f6 !important;
+    }
+
+    .entry-details {
+        margin-top: 4px;
+    }
+
+    .entry-details li {
+        font-size: 9pt;
+        margin-bottom: 3px;
+        padding-left: 14px;
+    }
+
+    .entry-details li::before {
+        width: 4px;
+        height: 4px;
+        top: 7px;
+    }
+
+    .entry-description {
+        font-size: 9pt;
+    }
+
+    .skills-grid {
+        gap: 12px;
+    }
+
+    .skill-category-title {
+        font-size: 9pt;
+        margin-bottom: 6px;
+    }
+
+    .skill-tags {
+        gap: 4px;
+    }
+
+    .skill-tag {
+        font-size: 8pt;
+        padding: 3px 8px;
+        background-color: var(--color-accent-light) !important;
+        color: var(--color-accent) !important;
+        transform: none !important;
+    }
+
+    .footer {
+        padding: 20px 0 0;
+        font-size: 8pt;
+    }
+
+    /* Prevent orphans and widows */
+    p, li {
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* Page break controls */
+    .section:first-of-type {
+        border-top: none !important;
+    }
+
+    h2, h3 {
+        page-break-after: avoid;
     }
 }
