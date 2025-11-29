@@ -95,10 +95,10 @@ open index.html
 ## Future Enhancements
 
 - [ ] Add profile photo
-- [ ] Add icons to contact links
+- [x] Add icons to contact links
 - [ ] Populate Projects section with Streamlit dashboards
-- [ ] Add dark mode toggle
-- [ ] Add downloadable PDF version
+- [x] Add dark mode toggle
+- [x] Add downloadable PDF version
 - [ ] Add meta tags for social sharing (Open Graph)
 
 ## Tech Stack
