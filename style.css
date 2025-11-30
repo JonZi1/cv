@@ -66,6 +66,17 @@ body {
     margin-bottom: 20px;
 }
 
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    margin-bottom: 20px;
+    border: 3px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+}
+
 .name {
     font-size: 2.75rem;
     font-weight: 700;
@@ -420,6 +431,12 @@ body {
     .header {
         padding: 0 0 10px 0;
         margin-bottom: 5px;
+    }
+
+    .profile-photo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
     }
 
     .name {
