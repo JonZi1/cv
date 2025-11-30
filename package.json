@@ -1,0 +1,13 @@
+{
+  "name": "cv",
+  "description": "Personal CV website for Jon Zisi",
+  "scripts": {
+    "crop-photo": "node crop-photo.js",
+    "test-header": "node test-header.js",
+    "serve": "python3 -m http.server 8000"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0",
+    "sharp": "^0.34.5"
+  }
+}
