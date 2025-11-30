@@ -39,7 +39,7 @@
         </button>
     </div>
 
-    <div class="container">
+    <main class="container">
         <!-- Header -->
         <header class="header">
             <div class="header-content">
@@ -226,7 +226,7 @@
         <footer class="footer">
             <p>&copy; 2025 Jon Zisi. All rights reserved.</p>
         </footer>
-    </div>
+    </main>
 
     <script>
         // Theme Toggle
@@ -235,8 +235,16 @@
         const sunIcon = document.getElementById('sun-icon');
         const html = document.documentElement;
 
+        // Safe localStorage access (fails silently in private browsing)
+        const getTheme = () => {
+            try { return localStorage.getItem('theme'); } catch { return null; }
+        };
+        const setTheme = (theme) => {
+            try { localStorage.setItem('theme', theme); } catch {}
+        };
+
         // Check for saved preference or system preference
-        const savedTheme = localStorage.getItem('theme');
+        const savedTheme = getTheme();
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
         if (savedTheme === 'dark' || (!savedTheme && systemDark)) {
@@ -250,12 +258,12 @@
 
             if (isDark) {
                 html.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
+                setTheme('light');
                 moonIcon.classList.remove('hidden');
                 sunIcon.classList.add('hidden');
             } else {
                 html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
+                setTheme('dark');
                 moonIcon.classList.add('hidden');
                 sunIcon.classList.remove('hidden');
             }
