@@ -53,3 +53,29 @@ document.getElementById('download-pdf').addEventListener('click', () => {
         window.print();
     }
 });
+
+// Share button
+document.getElementById('share-btn').addEventListener('click', async () => {
+    const shareData = {
+        title: 'Jon Zisi | Data Analyst',
+        text: 'Check out Jon Zisi\'s CV - Data Analyst with expertise in SQL, Python, BigQuery, and Looker Studio.',
+        url: window.location.href
+    };
+
+    if (navigator.share) {
+        try {
+            await navigator.share(shareData);
+        } catch (err) {
+            // User cancelled or share failed - ignore
+        }
+    } else {
+        // Fallback: copy to clipboard
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        } catch (err) {
+            // Fallback for older browsers
+            prompt('Copy this link:', window.location.href);
+        }
+    }
+});
