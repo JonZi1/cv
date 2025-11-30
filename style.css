@@ -130,7 +130,7 @@ body {
     color: var(--color-text-muted);
     font-weight: 400;
     max-width: 500px;
-    margin: 0 auto 24px;
+    margin: 0 auto 20px;
 }
 
 .contact-bar {
