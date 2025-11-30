@@ -57,9 +57,16 @@
     }
     </script>
 
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="fonts/inter-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/inter-semibold.woff2" as="font" type="font/woff2" crossorigin>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Skip to main content link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- Action Buttons -->
     <div class="action-buttons">
         <button class="action-btn" id="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
@@ -71,7 +78,7 @@
         </button>
     </div>
 
-    <main class="container">
+    <main class="container" id="main-content">
         <!-- Header -->
         <header class="header">
             <picture>
