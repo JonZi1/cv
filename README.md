@@ -1,18 +1,57 @@
 # Jon Zisi - Personal CV Website
 
-A clean, minimal, and professional CV/portfolio website built with HTML and CSS.
+A clean, minimal, and professional CV/portfolio website built with HTML, CSS, and vanilla JavaScript.
 
 **Live Site:** [jonzi1.github.io/cv](https://jonzi1.github.io/cv/)
+
+## Features
+
+- Dark mode toggle (respects system preference)
+- Download as PDF
+- Share button (native share on mobile, copy link on desktop)
+- Self-hosted Inter font (no external dependencies)
+- Responsive design (mobile, tablet, desktop)
+- Print-optimized styles
+- Custom 404 page
 
 ## Project Structure
 
 ```
 cv/
-├── index.html      # Main CV page (all content lives here)
-├── style.css       # Styling (colors, typography, layout)
-├── assets/         # Images (profile photo, project screenshots)
-├── .gitignore      # Files excluded from git
-└── README.md       # This file
+├── index.html          # Main CV page
+├── style.css           # Styling (variables, layout, dark mode, print)
+├── script.js           # Theme toggle, PDF download, share functionality
+├── 404.html            # Custom error page
+├── favicon.svg         # Browser tab icon
+├── apple-touch-icon.png # iOS home screen icon
+├── fonts/              # Self-hosted Inter font (woff2)
+├── assets/
+│   ├── photo-square.webp  # Profile photo (optimized)
+│   └── photo-square.png   # Profile photo (fallback)
+├── package.json        # npm scripts
+├── crop-photo.js       # Utility to crop profile photo
+├── test-header.js      # Visual testing script
+└── README.md           # This file
+```
+
+## Local Development
+
+```bash
+# Using npm script
+npm run serve
+
+# Or using Python directly
+python3 -m http.server 8000
+```
+
+Then open http://localhost:8000
+
+## npm Scripts
+
+```bash
+npm run serve        # Start local dev server on port 8000
+npm run crop-photo   # Process profile photo (requires sharp)
+npm run test-header  # Screenshot header for testing (requires playwright)
 ```
 
 ## How to Update Content
@@ -20,8 +59,8 @@ cv/
 All CV content is in `index.html`. To update:
 
 1. **Personal Info:** Edit the `<header>` section (name, title, contact links)
-2. **About:** Edit the `<section>` with class `section-title` "About"
-3. **Experience:** Add/edit `<div class="entry">` blocks in the Experience section
+2. **About:** Edit the `<section>` with "About" title
+3. **Experience:** Add/edit `<div class="entry">` blocks
 4. **Education:** Same structure as Experience
 5. **Skills:** Edit `<span class="skill-tag">` elements
 6. **Languages:** Edit skill tags in the Languages section
@@ -44,21 +83,9 @@ All CV content is in `index.html`. To update:
 </div>
 ```
 
-### Adding a New Skill
-
-```html
-<span class="skill-tag">New Skill</span>
-```
-
 ## Styling Customization
 
-Edit `style.css` to change:
-
-- **Colors:** Modify CSS variables in `:root` at the top
-- **Fonts:** Change the Google Fonts import and `font-family`
-- **Spacing:** Adjust `padding` and `margin` values
-
-### Color Variables
+Edit `style.css` to change colors, fonts, or spacing. CSS variables are defined in `:root`:
 
 ```css
 :root {
@@ -71,41 +98,20 @@ Edit `style.css` to change:
 }
 ```
 
+Dark mode overrides these in `[data-theme="dark"]`.
+
 ## Deployment
 
 The site is automatically deployed via **GitHub Pages** from the `master` branch.
 
 Any push to `master` will trigger a rebuild (takes ~1-2 minutes).
 
-## Local Development
-
-To preview changes locally, simply open `index.html` in a browser:
-
-```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node.js
-npx serve .
-
-# Or just open the file directly
-open index.html
-```
-
-## Future Enhancements
-
-- [ ] Add profile photo
-- [x] Add icons to contact links
-- [ ] Populate Projects section with Streamlit dashboards
-- [x] Add dark mode toggle
-- [x] Add downloadable PDF version
-- [ ] Add meta tags for social sharing (Open Graph)
-
 ## Tech Stack
 
 - **HTML5** - Semantic markup
-- **CSS3** - Custom properties, Flexbox, Grid
-- **Google Fonts** - Inter font family
+- **CSS3** - Custom properties, Flexbox, Grid, print styles
+- **JavaScript** - Vanilla JS (no frameworks)
+- **Inter Font** - Self-hosted (woff2)
 - **GitHub Pages** - Hosting
 
 ## License
