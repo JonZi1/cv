@@ -273,6 +273,13 @@ body {
     color: var(--color-text-muted);
 }
 
+.entry-progression {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    margin-top: 2px;
+}
+
 /* ===== Skills ===== */
 .skills-grid {
     display: grid;
@@ -567,6 +574,12 @@ body {
 
     .entry-description {
         font-size: 8pt;
+    }
+
+    .entry-progression {
+        font-size: 7.5pt;
+        font-style: italic;
+        margin-top: 1px;
     }
 
     .skills-grid {
