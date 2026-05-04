@@ -19,9 +19,6 @@ const BANNED = [
 ];
 
 const REQUIRED_PROJECTS = [
-    'Product & Pricing Workflow Improvements',
-    'Operations & Backlog Dashboards',
-    'Material Catalog & Pricing Analysis',
     'AI-Assisted Internal Tooling',
 ];
 
