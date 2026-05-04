@@ -1,0 +1,62 @@
+name: Regenerate cv.pdf
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'index.html'
+      - 'style.css'
+      - 'script.js'
+      - 'assets/**'
+      - 'fonts/**'
+      - 'qa-pdf.js'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cv-pdf
+  cancel-in-progress: false
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Serve and generate cv.pdf
+        run: |
+          python3 -m http.server 8000 > /dev/null 2>&1 &
+          SERVER_PID=$!
+          # wait for server
+          for i in {1..20}; do
+            if curl -fs http://localhost:8000/ > /dev/null; then break; fi
+            sleep 0.5
+          done
+          npm run generate-pdf
+          kill $SERVER_PID || true
+
+      - name: Commit regenerated cv.pdf if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- cv.pdf; then
+            echo "cv.pdf unchanged — nothing to commit"
+          else
+            git add cv.pdf
+            git commit -m "Regenerate cv.pdf [skip ci]"
+            git push
+          fi

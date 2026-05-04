@@ -38,20 +38,15 @@ themeToggle.addEventListener('click', () => {
     }
 });
 
-// Download PDF
+// Download PDF — serves a pre-rendered PDF so the result is identical for
+// every visitor and never depends on their browser's print dialog or extensions.
 document.getElementById('download-pdf').addEventListener('click', () => {
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const isAndroid = /Android/i.test(navigator.userAgent);
-
-    if (isIOS) {
-        alert('On iPhone/iPad:\n\n1. Tap Share button (□↑)\n2. Tap "Print"\n3. Pinch outward on preview to save as PDF');
-    } else if (isAndroid) {
-        alert('Tip: Select "Save as PDF" as the printer in the next dialog.');
-        window.print();
-    } else {
-        alert('Tip: In print dialog, go to "More settings" and disable "Headers and footers" for a cleaner PDF.');
-        window.print();
-    }
+    const a = document.createElement('a');
+    a.href = 'cv.pdf';
+    a.download = 'jon-zisi-cv.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
 });
 
 // Share button
