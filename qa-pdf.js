@@ -54,6 +54,25 @@ const REQUIRED_OTHER = [
         margin: { top: '0.4in', right: '0.5in', bottom: '0.4in', left: '0.5in' },
     });
     await browser.close();
+
+    // Strip nondeterministic metadata timestamps from the PDF so identical
+    // content produces byte-identical output across runs. Keeps the same byte
+    // count (14 digits in, 14 digits out), so XREF offsets stay valid.
+    {
+        const bytes = fs.readFileSync(OUT);
+        const before = bytes.length;
+        const patched = bytes.toString('binary').replace(
+            /(\/(?:Creation|Mod)Date\s*\(D:)\d{14}/g,
+            '$1' + '20260101000000'
+        );
+        if (patched.length !== before) {
+            failures.push(`metadata patch changed byte length: ${before} -> ${patched.length}`);
+        } else if (patched !== bytes.toString('binary')) {
+            fs.writeFileSync(OUT, patched, 'binary');
+            console.log('OK   normalised CreationDate/ModDate to fixed timestamp');
+        }
+    }
+
     const stat = fs.statSync(OUT);
     if (stat.size < 10_000) failures.push(`PDF too small (${stat.size} bytes)`);
     else console.log(`OK   PDF generated: ${OUT} (${stat.size} bytes)`);
