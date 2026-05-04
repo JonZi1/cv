@@ -4,7 +4,8 @@
   "scripts": {
     "crop-photo": "node crop-photo.js",
     "test-header": "node test-header.js",
-    "serve": "python3 -m http.server 8000"
+    "serve": "python3 -m http.server 8000",
+    "qa": "node qa-static.js"
   },
   "dependencies": {
     "playwright": "^1.57.0",

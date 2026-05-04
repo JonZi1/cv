@@ -57,8 +57,8 @@ document.getElementById('download-pdf').addEventListener('click', () => {
 // Share button
 document.getElementById('share-btn').addEventListener('click', async () => {
     const shareData = {
-        title: 'Jon Zisi | Data Analyst',
-        text: 'Check out Jon Zisi\'s CV - Data Analyst with expertise in SQL, Python, BigQuery, and Looker Studio.',
+        title: 'Jon Zisi | Junior Product Manager',
+        text: "Check out Jon Zisi’s CV - Junior Product Manager with a strong Data / Business Analyst background across SQL, BI, operations analytics, automation, and AI-assisted workflows.",
         url: window.location.href
     };
 
