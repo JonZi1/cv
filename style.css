@@ -462,14 +462,14 @@ body {
     }
 
     .header {
-        padding: 0 0 10px 0;
-        margin-bottom: 5px;
+        padding: 0 0 6px 0;
+        margin-bottom: 2px;
     }
 
     .profile-photo {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 10px;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 6px;
     }
 
     .name {
@@ -508,7 +508,8 @@ body {
         border-radius: 0;
         padding: 8px 0;
         margin-bottom: 0;
-        page-break-inside: avoid;
+        page-break-inside: auto;
+        break-inside: auto;
     }
 
     .section-title {
@@ -526,6 +527,7 @@ body {
     .entry {
         margin-bottom: 10px;
         page-break-inside: avoid;
+        break-inside: avoid;
     }
 
     .entry-header {
