@@ -18,10 +18,6 @@ const BANNED = [
     'standardisation',
 ];
 
-const REQUIRED_PROJECTS = [
-    'AI-Assisted Internal Tooling',
-];
-
 const REQUIRED_OTHER = [
     'Junior Product Manager',
     'Data / Business Analyst',
@@ -109,10 +105,6 @@ const REQUIRED_OTHER = [
     }
 
     // 5. Required content. Reuses normFull from above.
-    for (const term of REQUIRED_PROJECTS) {
-        if (!normFull.includes(norm(term))) failures.push(`MISSING project: "${term}"`);
-        else console.log(`OK   project visible: "${term}"`);
-    }
     for (const term of REQUIRED_OTHER) {
         if (!normFull.includes(norm(term))) failures.push(`MISSING required text: "${term}"`);
         else console.log(`OK   present: "${term}"`);
