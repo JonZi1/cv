@@ -38,6 +38,12 @@ for (const term of banned) {
     check(`no "${term}"`, !html.includes(term) && !js.includes(term));
 }
 
+// PDF-contamination terms must not appear in source
+const contam = ['Drawbridge', 'Connect to a local folder', 'Disco'];
+for (const term of contam) {
+    check(`no "${term}" in source`, !html.includes(term) && !js.includes(term));
+}
+
 // Jira IDs: <PROJECT>-<digits>
 const jiraRe = /\b(DA|SYS|ENG|APPS|CAD|CM|IT)-\d+\b/;
 const jiraInHtml = html.match(jiraRe);
