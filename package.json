@@ -7,6 +7,8 @@
     "serve": "python3 -m http.server 8000",
     "qa": "node qa-static.js",
     "qa-pdf": "node qa-pdf.js",
+    "qa-pdf-pm": "QA_URL=http://localhost:8000/pm.html QA_PDF_OUT=cv-pm.pdf node qa-pdf.js",
+    "qa-pdf-all": "npm run qa-pdf && npm run qa-pdf-pm",
     "generate-pdf": "node qa-pdf.js"
   },
   "dependencies": {

@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const URL = process.env.QA_URL || 'http://localhost:8000/';
-const OUT = path.join(__dirname, 'cv.pdf');
+const OUT = path.join(__dirname, process.env.QA_PDF_OUT || 'cv.pdf');
 
 const BANNED = [
     'Drawbridge',

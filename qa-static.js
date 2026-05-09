@@ -27,9 +27,15 @@ if (!ldMatch) {
 check('no "Data Analyst | AI Enthusiast"', !html.includes('Data Analyst | AI Enthusiast'));
 check('no "Jan 2022 - Present"', !html.includes('Jan 2022 - Present'));
 check('footer contains 2026', /&copy;\s*2026\s+Jon Zisi/.test(html));
-check('title contains "Jon Zisi | Junior Product Manager"', /<title>[^<]*Jon Zisi \| Junior Product Manager[^<]*<\/title>/.test(html));
+check('title contains "Jon Zisi | Senior Data Analyst"', /<title>[^<]*Jon Zisi \| Senior Data Analyst[^<]*<\/title>/.test(html));
 
-// script.js shareData
+// script.js shareData should be dynamic (read from document.title / meta) so
+// pm.html and index.html each share their own flavour. Reject hard-coded titles
+// that would lock both pages into one variant.
+check('script.js shareData reads document.title', js.includes('title: document.title'));
+check('script.js shareData reads meta description', js.includes('meta[name="description"]'));
+check('script.js shareData not hard-coded "Jon Zisi | Senior Data Analyst"', !js.includes("'Jon Zisi | Senior Data Analyst'") && !js.includes('"Jon Zisi | Senior Data Analyst"'));
+check('script.js shareData not "Jon Zisi | Junior Product Manager"', !js.includes("'Jon Zisi | Junior Product Manager'") && !js.includes('"Jon Zisi | Junior Product Manager"'));
 check('script.js shareData not "Jon Zisi | Data Analyst"', !js.includes("'Jon Zisi | Data Analyst'") && !js.includes('"Jon Zisi | Data Analyst"'));
 
 // British catalog spellings absent

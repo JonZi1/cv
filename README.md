@@ -14,11 +14,23 @@ A clean, minimal, and professional CV/portfolio website built with HTML, CSS, an
 - Print-optimized styles
 - Custom 404 page
 
+## CV Variants
+
+The repo serves **two** CV variants from the same styles, fonts, and assets:
+
+- **`index.html`** — Senior Data Analyst flavour (default landing page, used for analytics / data / BI / product analyst applications).
+- **`pm.html`** — Junior Product Manager flavour (used for product management applications where the PM transition story is the lead).
+
+Each page links to the other via a small banner that is hidden on print so it does not appear in the generated PDF.
+
 ## Project Structure
 
 ```
 cv/
-├── index.html          # Main CV page
+├── index.html          # Senior Data Analyst CV (default)
+├── pm.html             # Junior Product Manager CV (variant)
+├── cv.pdf              # Pre-rendered PDF for index.html
+├── cv-pm.pdf           # Pre-rendered PDF for pm.html
 ├── style.css           # Styling (variables, layout, dark mode, print)
 ├── script.js           # Theme toggle, PDF download, share functionality
 ├── 404.html            # Custom error page
@@ -29,6 +41,8 @@ cv/
 │   ├── photo-square.webp  # Profile photo (optimized)
 │   └── photo-square.png   # Profile photo (fallback)
 ├── package.json        # npm scripts
+├── qa-static.js        # Static HTML/JS sanity checks
+├── qa-pdf.js           # Generate + sanity-check the PDF (parametrised by QA_URL / QA_PDF_OUT)
 ├── crop-photo.js       # Utility to crop profile photo
 ├── test-header.js      # Visual testing script
 └── README.md           # This file
@@ -49,14 +63,22 @@ Then open http://localhost:8000
 ## npm Scripts
 
 ```bash
-npm run serve        # Start local dev server on port 8000
-npm run crop-photo   # Process profile photo (requires sharp)
-npm run test-header  # Screenshot header for testing (requires playwright)
+npm run serve         # Start local dev server on port 8000
+npm run qa            # Run static HTML/JS sanity checks
+npm run qa-pdf        # Generate cv.pdf from index.html and run PDF sanity checks
+npm run qa-pdf-pm     # Generate cv-pm.pdf from pm.html and run PDF sanity checks
+npm run qa-pdf-all    # Generate and check both PDFs (requires server running)
+npm run crop-photo    # Process profile photo (requires sharp)
+npm run test-header   # Screenshot header for testing (requires playwright)
 ```
+
+The PDF scripts assume `npm run serve` is running on port 8000.
 
 ## How to Update Content
 
-All CV content is in `index.html`. To update:
+CV content lives in two HTML files: `index.html` (Senior Data Analyst, default) and `pm.html` (Junior Product Manager). Both use the same `<header>` / `<section>` / `<div class="entry">` structure — update each variant separately for content that should differ between them, or update both for content that applies to both (e.g. contact details, education, certifications, languages).
+
+To update:
 
 1. **Personal Info:** Edit the `<header>` section (name, title, contact links)
 2. **About:** Edit the `<section>` with "About" title

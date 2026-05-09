@@ -40,20 +40,25 @@ themeToggle.addEventListener('click', () => {
 
 // Download PDF — serves a pre-rendered PDF so the result is identical for
 // every visitor and never depends on their browser's print dialog or extensions.
-document.getElementById('download-pdf').addEventListener('click', () => {
+// The button can override the source path and download filename per-page via
+// data-pdf and data-pdf-name attributes (used by the PM-flavoured variant).
+document.getElementById('download-pdf').addEventListener('click', (e) => {
+    const btn = e.currentTarget;
     const a = document.createElement('a');
-    a.href = 'cv.pdf';
-    a.download = 'jon-zisi-cv.pdf';
+    a.href = btn.dataset.pdf || 'cv.pdf';
+    a.download = btn.dataset.pdfName || 'jon-zisi-cv.pdf';
     document.body.appendChild(a);
     a.click();
     a.remove();
 });
 
-// Share button
+// Share button — reads the current page's <title> and meta description so each
+// CV variant (index.html, pm.html) shares its own flavour automatically.
 document.getElementById('share-btn').addEventListener('click', async () => {
+    const metaDesc = document.querySelector('meta[name="description"]');
     const shareData = {
-        title: 'Jon Zisi | Junior Product Manager',
-        text: "Check out Jon Zisi’s CV - Junior Product Manager with a strong Data / Business Analyst background across SQL, BI, operations analytics, automation, and AI-assisted workflows.",
+        title: document.title,
+        text: metaDesc ? metaDesc.content : "Jon Zisi’s CV",
         url: window.location.href
     };
 
