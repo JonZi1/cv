@@ -27,7 +27,7 @@ if (!ldMatch) {
 check('no "Data Analyst | AI Enthusiast"', !html.includes('Data Analyst | AI Enthusiast'));
 check('no "Jan 2022 - Present"', !html.includes('Jan 2022 - Present'));
 check('footer contains 2026', /&copy;\s*2026\s+Jon Zisi/.test(html));
-check('title contains "Jon Zisi | Senior Data Analyst"', /<title>[^<]*Jon Zisi \| Senior Data Analyst[^<]*<\/title>/.test(html));
+check('title contains "Jon Zisi | Data Analyst"', /<title>[^<]*Jon Zisi \| Data Analyst[^<]*<\/title>/.test(html));
 
 // script.js shareData should be dynamic (read from document.title / meta) so
 // pm.html and index.html each share their own flavour. Reject hard-coded titles

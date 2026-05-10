@@ -18,7 +18,7 @@ A clean, minimal, and professional CV/portfolio website built with HTML, CSS, an
 
 The repo serves **two** CV variants from the same styles, fonts, and assets:
 
-- **`index.html`** — Senior Data Analyst flavour (default landing page, used for analytics / data / BI / product analyst applications).
+- **`index.html`** — Data Analyst flavour (default landing page, used for analytics / data / BI / product analyst applications). Headline-titled "Data Analyst" rather than "Senior Data Analyst" to match the way most Greek-market and EU-remote JDs title these roles, which improves ATS keyword matching; the experience and bullet content still position at the senior end of the band.
 - **`pm.html`** — Junior Product Manager flavour (used for product management applications where the PM transition story is the lead).
 
 Each page links to the other via a small banner that is hidden on print so it does not appear in the generated PDF.
@@ -27,7 +27,7 @@ Each page links to the other via a small banner that is hidden on print so it do
 
 ```
 cv/
-├── index.html          # Senior Data Analyst CV (default)
+├── index.html          # Data Analyst CV (default)
 ├── pm.html             # Junior Product Manager CV (variant)
 ├── cv.pdf              # Pre-rendered PDF for index.html
 ├── cv-pm.pdf           # Pre-rendered PDF for pm.html
@@ -76,7 +76,7 @@ The PDF scripts assume `npm run serve` is running on port 8000.
 
 ## How to Update Content
 
-CV content lives in two HTML files: `index.html` (Senior Data Analyst, default) and `pm.html` (Junior Product Manager). Both use the same `<header>` / `<section>` / `<div class="entry">` structure — update each variant separately for content that should differ between them, or update both for content that applies to both (e.g. contact details, education, certifications, languages).
+CV content lives in two HTML files: `index.html` (Data Analyst, default) and `pm.html` (Junior Product Manager). Both use the same `<header>` / `<section>` / `<div class="entry">` structure — update each variant separately for content that should differ between them, or update both for content that applies to both (e.g. contact details, education, certifications, languages).
 
 To update:
 
