@@ -1,15 +1,17 @@
-name: Regenerate cv.pdf
+name: Regenerate CV PDFs
 
 on:
   push:
     branches: [master]
     paths:
       - 'index.html'
+      - 'pm.html'
       - 'style.css'
       - 'script.js'
       - 'assets/**'
       - 'fonts/**'
       - 'qa-pdf.js'
+      - 'qa-static.js'
       - 'package.json'
       - 'package-lock.json'
 
@@ -37,7 +39,7 @@ jobs:
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
 
-      - name: Serve and generate cv.pdf
+      - name: Serve and generate both CV PDFs
         run: |
           python3 -m http.server 8000 > /dev/null 2>&1 &
           SERVER_PID=$!
@@ -46,17 +48,17 @@ jobs:
             if curl -fs http://localhost:8000/ > /dev/null; then break; fi
             sleep 0.5
           done
-          npm run generate-pdf
+          npm run qa-all
           kill $SERVER_PID || true
 
-      - name: Commit regenerated cv.pdf if changed
+      - name: Commit regenerated CV PDFs if changed
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- cv.pdf; then
-            echo "cv.pdf unchanged — nothing to commit"
+          if git diff --quiet -- cv.pdf cv-pm.pdf; then
+            echo "CV PDFs unchanged — nothing to commit"
           else
-            git add cv.pdf
-            git commit -m "Regenerate cv.pdf [skip ci]"
+            git add cv.pdf cv-pm.pdf
+            git commit -m "Regenerate CV PDFs [skip ci]"
             git push
           fi

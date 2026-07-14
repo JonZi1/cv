@@ -11,15 +11,15 @@ A clean, minimal, and professional CV/portfolio website built with HTML, CSS, an
 - Share button (native share on mobile, copy link on desktop)
 - Self-hosted Inter font (no external dependencies)
 - Responsive design (mobile, tablet, desktop)
-- Print-optimized styles
+- One-page A4 PDFs with automated content, pagination, and font-size checks
 - Custom 404 page
 
 ## CV Variants
 
 The repo serves **two** CV variants from the same styles, fonts, and assets:
 
-- **`index.html`** — Data Analyst flavour (default landing page, used for analytics / data / BI / product analyst applications). Headline-titled "Data Analyst" rather than "Senior Data Analyst" to match the way most Greek-market and EU-remote JDs title these roles, which improves ATS keyword matching; the experience and bullet content still position at the senior end of the band.
-- **`pm.html`** — Junior Product Manager flavour (used for product management applications where the PM transition story is the lead).
+- **`index.html`** — Data Analyst flavour with the headline **Data Analyst | BI, SQL & Automation**.
+- **`pm.html`** — Junior Product Manager flavour with the headline **Junior Product Manager | Product Operations, Data & Automation**.
 
 Each page links to the other via a small banner that is hidden on print so it does not appear in the generated PDF.
 
@@ -41,8 +41,8 @@ cv/
 │   ├── photo-square.webp  # Profile photo (optimized)
 │   └── photo-square.png   # Profile photo (fallback)
 ├── package.json        # npm scripts
-├── qa-static.js        # Static HTML/JS sanity checks
-├── qa-pdf.js           # Generate + sanity-check the PDF (parametrised by QA_URL / QA_PDF_OUT)
+├── qa-static.js        # Dual-variant content and structure checks
+├── qa-pdf.js           # Dual-variant one-page PDF, font-floor, and content checks
 ├── crop-photo.js       # Utility to crop profile photo
 ├── test-header.js      # Visual testing script
 └── README.md           # This file
@@ -66,8 +66,10 @@ Then open http://localhost:8000
 npm run serve         # Start local dev server on port 8000
 npm run qa            # Run static HTML/JS sanity checks
 npm run qa-pdf        # Generate cv.pdf from index.html and run PDF sanity checks
+npm run qa-pdf-data   # Explicit Data Analyst PDF command
 npm run qa-pdf-pm     # Generate cv-pm.pdf from pm.html and run PDF sanity checks
 npm run qa-pdf-all    # Generate and check both PDFs (requires server running)
+npm run qa-all        # Run static QA and generate/check both PDFs
 npm run crop-photo    # Process profile photo (requires sharp)
 npm run test-header   # Screenshot header for testing (requires playwright)
 ```
@@ -76,7 +78,7 @@ The PDF scripts assume `npm run serve` is running on port 8000.
 
 ## How to Update Content
 
-CV content lives in two HTML files: `index.html` (Data Analyst, default) and `pm.html` (Junior Product Manager). Both use the same `<header>` / `<section>` / `<div class="entry">` structure — update each variant separately for content that should differ between them, or update both for content that applies to both (e.g. contact details, education, certifications, languages).
+CV content lives in two HTML files: `index.html` (Data Analyst, default) and `pm.html` (Junior Product Manager). Both use the same semantic `<header>` / `<section>` / `<article class="entry">` structure. Update each variant separately for role-specific content, or update both for shared content such as contact details, education, and languages.
 
 To update:
 
@@ -90,7 +92,7 @@ To update:
 ### Adding a New Job Entry
 
 ```html
-<div class="entry">
+<article class="entry" data-employer="example">
     <div class="entry-header">
         <div>
             <h3 class="entry-title">Job Title</h3>
@@ -102,7 +104,7 @@ To update:
         <li>Achievement or responsibility</li>
         <li>Another bullet point</li>
     </ul>
-</div>
+</article>
 ```
 
 ## Styling Customization

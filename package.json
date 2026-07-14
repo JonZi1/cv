@@ -6,10 +6,12 @@
     "test-header": "node test-header.js",
     "serve": "python3 -m http.server 8000",
     "qa": "node qa-static.js",
-    "qa-pdf": "node qa-pdf.js",
-    "qa-pdf-pm": "QA_URL=http://localhost:8000/pm.html QA_PDF_OUT=cv-pm.pdf node qa-pdf.js",
-    "qa-pdf-all": "npm run qa-pdf && npm run qa-pdf-pm",
-    "generate-pdf": "node qa-pdf.js"
+    "qa-pdf": "npm run qa-pdf-data",
+    "qa-pdf-data": "QA_VARIANT=data QA_URL=http://localhost:8000/index.html QA_PDF_OUT=cv.pdf node qa-pdf.js",
+    "qa-pdf-pm": "QA_VARIANT=pm QA_URL=http://localhost:8000/pm.html QA_PDF_OUT=cv-pm.pdf node qa-pdf.js",
+    "qa-pdf-all": "npm run qa-pdf-data && npm run qa-pdf-pm",
+    "qa-all": "npm run qa && npm run qa-pdf-all",
+    "generate-pdf": "npm run qa-pdf-all"
   },
   "dependencies": {
     "playwright": "^1.57.0",
