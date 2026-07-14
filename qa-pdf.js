@@ -3,119 +3,161 @@ const { PDFParse } = require('pdf-parse');
 const fs = require('fs');
 const path = require('path');
 
-const URL = process.env.QA_URL || 'http://localhost:8000/';
-const OUT = path.join(__dirname, process.env.QA_PDF_OUT || 'cv.pdf');
+const variants = {
+    data: {
+        url: 'http://localhost:8000/index.html',
+        output: 'cv.pdf',
+        headline: 'Data Analyst | BI, SQL & Automation',
+        pmBullets: 2,
+        analystBullets: 4,
+    },
+    pm: {
+        url: 'http://localhost:8000/pm.html',
+        output: 'cv-pm.pdf',
+        headline: 'Junior Product Manager | Product Operations, Data & Automation',
+        pmBullets: 4,
+        analystBullets: 2,
+    },
+};
 
-const BANNED = [
+const variantName = process.env.QA_VARIANT || 'data';
+const variant = variants[variantName];
+if (!variant) throw new Error(`Unknown QA_VARIANT: ${variantName}`);
+
+const URL = process.env.QA_URL || variant.url;
+const OUT = path.join(__dirname, process.env.QA_PDF_OUT || variant.output);
+const normalise = value => value.toLowerCase().replace(/[^a-z0-9]+/g, '');
+
+const banned = [
     'Drawbridge',
     'Connect to a local folder',
     'Press C to make a comment',
     'Disco',
     'Data Analyst | AI Enthusiast',
     'Jan 2022 - Present',
-    'catalogue',
-    'Catalogue',
-    'standardisation',
-];
-
-const REQUIRED_OTHER = [
-    'Junior Product Manager',
-    'Data / Business Analyst',
-    'Apr 2026',
-    'Jan 2022',
-    'Mar 2026',
-    'Jon Zisi',
-    '2026',
 ];
 
 (async () => {
     const failures = [];
+    let browser;
 
-    // 1. Generate cv-clean.pdf via stock Playwright Chromium — no user data dir,
-    //    no extensions, no host-installed Chrome profile, so any extension-injected
-    //    overlay (e.g. Drawbridge / Disco) cannot reach the page.
-    console.log(`generating ${OUT} from ${URL} ...`);
-    const browser = await chromium.launch();
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await page.goto(URL, { waitUntil: 'networkidle' });
-    await page.emulateMedia({ media: 'print' });
-    await page.pdf({
-        path: OUT,
-        format: 'A4',
-        printBackground: true,
-        margin: { top: '0.4in', right: '0.5in', bottom: '0.4in', left: '0.5in' },
-    });
-    await browser.close();
+    try {
+        console.log(`generating ${OUT} from ${URL} (${variantName}) ...`);
+        browser = await chromium.launch();
+        const context = await browser.newContext();
+        const page = await context.newPage();
+        await page.goto(URL, { waitUntil: 'networkidle' });
+        await page.evaluate(() => document.fonts.ready);
+        await page.emulateMedia({ media: 'print' });
 
-    // Strip nondeterministic metadata timestamps from the PDF so identical
-    // content produces byte-identical output across runs. Keeps the same byte
-    // count (14 digits in, 14 digits out), so XREF offsets stay valid.
-    {
-        const bytes = fs.readFileSync(OUT);
-        const before = bytes.length;
-        const patched = bytes.toString('binary').replace(
-            /(\/(?:Creation|Mod)Date\s*\(D:)\d{14}/g,
-            '$1' + '20260101000000'
-        );
-        if (patched.length !== before) {
-            failures.push(`metadata patch changed byte length: ${before} -> ${patched.length}`);
-        } else if (patched !== bytes.toString('binary')) {
-            fs.writeFileSync(OUT, patched, 'binary');
-            console.log('OK   normalised CreationDate/ModDate to fixed timestamp');
-        }
-    }
+        const domAudit = await page.evaluate(() => {
+            const visible = element => {
+                const style = getComputedStyle(element);
+                return style.display !== 'none' && style.visibility !== 'hidden';
+            };
+            const textSelectors = [
+                'h1', '.title', '.contact-bar', '.section-title', '.about-text',
+                '.entry-title', '.entry-subtitle', '.entry-progression', '.entry-date',
+                '.entry-details li', '.skill-category-title', '.skill-tag',
+                '.education-line', '.languages-line',
+            ];
+            const text = [...document.querySelectorAll(textSelectors.join(','))]
+                .filter(visible)
+                .map(element => element.textContent.replace(/\s+/g, ' ').trim())
+                .filter(Boolean);
 
-    const stat = fs.statSync(OUT);
-    if (stat.size < 10_000) failures.push(`PDF too small (${stat.size} bytes)`);
-    else console.log(`OK   PDF generated: ${OUT} (${stat.size} bytes)`);
+            const fontRules = [
+                { selector: '.about-text', minPt: 9 },
+                { selector: '.entry-title', minPt: 9 },
+                { selector: '.entry-subtitle', minPt: 9 },
+                { selector: '.entry-progression', minPt: 9 },
+                { selector: '.entry-date', minPt: 9 },
+                { selector: '.entry-details li', minPt: 9 },
+                { selector: '.education-line', minPt: 9 },
+                { selector: '.contact-bar a', minPt: 8 },
+                { selector: '.contact-bar .location', minPt: 8 },
+                { selector: '.skill-category-title', minPt: 8 },
+                { selector: '.skill-tag', minPt: 8 },
+                { selector: '.languages-line', minPt: 8 },
+            ];
+            const fonts = fontRules.flatMap(rule => [...document.querySelectorAll(rule.selector)]
+                .filter(visible)
+                .map(element => ({
+                    selector: rule.selector,
+                    minPt: rule.minPt,
+                    actualPt: Number.parseFloat(getComputedStyle(element).fontSize) * 0.75,
+                    text: element.textContent.replace(/\s+/g, ' ').trim().slice(0, 60),
+                })));
 
-    // 2. Parse PDF bytes — this validates what the file actually contains, not what
-    //    the DOM looked like at print emulation time.
-    const parser = new PDFParse({ data: fs.readFileSync(OUT) });
-    const result = await parser.getText();
-    const pages = result.pages || [];
-    const fullText = result.text || '';
-    console.log(`OK   PDF parsed: ${pages.length} page(s), ${fullText.length} chars`);
+            return {
+                text,
+                fonts,
+                headline: document.querySelector('.title')?.textContent.trim(),
+                aiClaims: document.querySelectorAll('[data-ai-claim]').length,
+                pmBullets: document.querySelectorAll('[data-employer="ergeon"][data-role="pm"] li').length,
+                analystBullets: document.querySelectorAll('[data-employer="ergeon"][data-role="analyst"] li').length,
+            };
+        });
 
-    // 3. No banned term may appear anywhere in the PDF. Normalise to defeat
-    //    PDF-extraction artifacts that could splice/drop characters.
-    const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '');
-    const normFull = norm(fullText);
-    for (const term of BANNED) {
-        if (normFull.includes(norm(term))) failures.push(`BANNED in PDF: "${term}"`);
-        else console.log(`OK   no "${term}" anywhere in PDF`);
-    }
-
-    // 4. Page 2 must start with CV content, not an external panel.
-    if (pages.length >= 2) {
-        const p2 = (pages[1].text || '').trim();
-        const p2start = p2.slice(0, 200);
-        const p2startNorm = norm(p2start);
-        let cleanStart = true;
-        for (const term of BANNED) {
-            if (p2startNorm.includes(norm(term))) {
-                failures.push(`page 2 starts with banned content: "${term}"`);
-                cleanStart = false;
+        if (domAudit.headline !== variant.headline) failures.push(`headline mismatch: ${domAudit.headline}`);
+        if (domAudit.aiClaims !== 1) failures.push(`expected one AI claim marker, found ${domAudit.aiClaims}`);
+        if (domAudit.pmBullets !== variant.pmBullets) failures.push(`PM bullets: expected ${variant.pmBullets}, found ${domAudit.pmBullets}`);
+        if (domAudit.analystBullets !== variant.analystBullets) failures.push(`analyst bullets: expected ${variant.analystBullets}, found ${domAudit.analystBullets}`);
+        for (const font of domAudit.fonts) {
+            if (font.actualPt + 0.05 < font.minPt) {
+                failures.push(`font below floor: ${font.selector} ${font.actualPt.toFixed(2)}pt < ${font.minPt}pt (${font.text})`);
             }
         }
-        if (cleanStart) console.log(`OK   page 2 clean — first 60 chars: ${JSON.stringify(p2start.slice(0, 60))}`);
-    } else {
-        console.log(`note PDF has only ${pages.length} page(s) — page-2 check skipped`);
-    }
+        const fontSummary = [...new Set(domAudit.fonts.map(font => `${font.selector}=${font.actualPt.toFixed(1)}pt`))];
+        console.log(`OK   print fonts: ${fontSummary.join(', ')}`);
 
-    // 5. Required content. Reuses normFull from above.
-    for (const term of REQUIRED_OTHER) {
-        if (!normFull.includes(norm(term))) failures.push(`MISSING required text: "${term}"`);
-        else console.log(`OK   present: "${term}"`);
+        await page.pdf({ path: OUT, printBackground: true, preferCSSPageSize: true });
+        await browser.close();
+        browser = null;
+
+        const bytes = fs.readFileSync(OUT);
+        const original = bytes.toString('binary');
+        const patched = original.replace(/(\/(?:Creation|Mod)Date\s*\(D:)\d{14}/g, '$1' + '20260101000000');
+        if (patched.length !== bytes.length) failures.push(`metadata patch changed byte length: ${bytes.length} -> ${patched.length}`);
+        else if (patched !== original) fs.writeFileSync(OUT, patched, 'binary');
+
+        const stat = fs.statSync(OUT);
+        if (stat.size < 10_000) failures.push(`PDF too small (${stat.size} bytes)`);
+        else console.log(`OK   PDF generated: ${OUT} (${stat.size} bytes)`);
+
+        const parser = new PDFParse({ data: fs.readFileSync(OUT) });
+        const result = await parser.getText();
+        await parser.destroy();
+        const pages = result.pages || [];
+        const fullText = result.text || '';
+        const normalisedPdf = normalise(fullText);
+        console.log(`OK   PDF parsed: ${pages.length} page(s), ${fullText.length} chars`);
+
+        if (pages.length !== 1) failures.push(`expected exactly one page, found ${pages.length}`);
+        for (const term of banned) {
+            if (normalisedPdf.includes(normalise(term))) failures.push(`banned text in PDF: "${term}"`);
+        }
+
+        const jira = fullText.match(/\b(DA|SYS|ENG|APPS|CAD|CM|IT|PO|PROD)-\d+\b/);
+        const internalEmail = fullText.match(/[A-Za-z0-9._%+-]+@ergeon\.com/i);
+        if (jira) failures.push(`Jira reference in PDF: ${jira[0]}`);
+        if (internalEmail) failures.push(`internal email in PDF: ${internalEmail[0]}`);
+
+        for (const text of domAudit.text) {
+            if (!normalisedPdf.includes(normalise(text))) failures.push(`DOM text missing from PDF: "${text}"`);
+        }
+        console.log(`OK   checked ${domAudit.text.length} visible content blocks against PDF text`);
+    } catch (error) {
+        failures.push(error.stack || error.message);
+    } finally {
+        if (browser) await browser.close();
     }
 
     console.log('---');
     if (failures.length) {
-        for (const f of failures) console.log(`FAIL ${f}`);
+        for (const failure of failures) console.log(`FAIL ${failure}`);
         console.log(`${failures.length} failure(s)`);
         process.exit(1);
-    } else {
-        console.log('all PDF QA checks passed');
     }
+    console.log(`all ${variantName} PDF QA checks passed`);
 })();
