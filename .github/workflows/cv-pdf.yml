@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'pm.html'
+      - 'analytics-engineer.html'
       - 'style.css'
       - 'script.js'
       - 'assets/**'
@@ -39,7 +40,7 @@ jobs:
       - name: Install Chromium for Playwright
         run: npx playwright install --with-deps chromium
 
-      - name: Serve and generate both CV PDFs
+      - name: Serve and generate all CV PDFs
         run: |
           python3 -m http.server 8000 > /dev/null 2>&1 &
           SERVER_PID=$!
@@ -55,10 +56,10 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- cv.pdf cv-pm.pdf; then
+          if git diff --quiet -- cv.pdf cv-pm.pdf cv-analytics-engineer.pdf; then
             echo "CV PDFs unchanged — nothing to commit"
           else
-            git add cv.pdf cv-pm.pdf
+            git add cv.pdf cv-pm.pdf cv-analytics-engineer.pdf
             git commit -m "Regenerate CV PDFs [skip ci]"
             git push
           fi
