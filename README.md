@@ -16,12 +16,13 @@ A clean, minimal, and professional CV/portfolio website built with HTML, CSS, an
 
 ## CV Variants
 
-The repo serves **two** CV variants from the same styles, fonts, and assets:
+The repo serves **three** CV variants from the same styles, fonts, and assets:
 
 - **`index.html`** — Data Analyst flavour with the headline **Data Analyst | BI, SQL & Automation**.
 - **`pm.html`** — Junior Product Manager flavour with the headline **Junior Product Manager | Product Operations, Data & Automation**.
+- **`analytics-engineer.html`** — Analytics Engineer flavour with the headline **Analytics Engineer | BigQuery, SQL & Airflow**.
 
-Each page links to the other via a small banner that is hidden on print so it does not appear in the generated PDF.
+Each page links to the other variants via a small banner that is hidden on print so it does not appear in the generated PDF.
 
 ## Project Structure
 
@@ -29,8 +30,10 @@ Each page links to the other via a small banner that is hidden on print so it do
 cv/
 ├── index.html          # Data Analyst CV (default)
 ├── pm.html             # Junior Product Manager CV (variant)
+├── analytics-engineer.html # Analytics Engineer CV (variant)
 ├── cv.pdf              # Pre-rendered PDF for index.html
 ├── cv-pm.pdf           # Pre-rendered PDF for pm.html
+├── cv-analytics-engineer.pdf # Pre-rendered PDF for analytics-engineer.html
 ├── style.css           # Styling (variables, layout, dark mode, print)
 ├── script.js           # Theme toggle, PDF download, share functionality
 ├── 404.html            # Custom error page
@@ -41,8 +44,8 @@ cv/
 │   ├── photo-square.webp  # Profile photo (optimized)
 │   └── photo-square.png   # Profile photo (fallback)
 ├── package.json        # npm scripts
-├── qa-static.js        # Dual-variant content and structure checks
-├── qa-pdf.js           # Dual-variant one-page PDF, font-floor, and content checks
+├── qa-static.js        # Multi-variant content and structure checks
+├── qa-pdf.js           # Multi-variant one-page PDF, font-floor, and content checks
 ├── crop-photo.js       # Utility to crop profile photo
 ├── test-header.js      # Visual testing script
 └── README.md           # This file
@@ -68,8 +71,9 @@ npm run qa            # Run static HTML/JS sanity checks
 npm run qa-pdf        # Generate cv.pdf from index.html and run PDF sanity checks
 npm run qa-pdf-data   # Explicit Data Analyst PDF command
 npm run qa-pdf-pm     # Generate cv-pm.pdf from pm.html and run PDF sanity checks
-npm run qa-pdf-all    # Generate and check both PDFs (requires server running)
-npm run qa-all        # Run static QA and generate/check both PDFs
+npm run qa-pdf-analytics-engineer # Generate the Analytics Engineer PDF
+npm run qa-pdf-all    # Generate and check all PDFs (requires server running)
+npm run qa-all        # Run static QA and generate/check all PDFs
 npm run crop-photo    # Process profile photo (requires sharp)
 npm run test-header   # Screenshot header for testing (requires playwright)
 ```
@@ -78,7 +82,7 @@ The PDF scripts assume `npm run serve` is running on port 8000.
 
 ## How to Update Content
 
-CV content lives in two HTML files: `index.html` (Data Analyst, default) and `pm.html` (Junior Product Manager). Both use the same semantic `<header>` / `<section>` / `<article class="entry">` structure. Update each variant separately for role-specific content, or update both for shared content such as contact details, education, and languages.
+CV content lives in three HTML files: `index.html` (Data Analyst, default), `pm.html` (Junior Product Manager), and `analytics-engineer.html` (Analytics Engineer). They use the same semantic `<header>` / `<section>` / `<article class="entry">` structure. Update each variant separately for role-specific content, or update all three for shared content such as contact details, education, and languages.
 
 To update:
 
