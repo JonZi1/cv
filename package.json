@@ -9,7 +9,8 @@
     "qa-pdf": "npm run qa-pdf-data",
     "qa-pdf-data": "QA_VARIANT=data QA_URL=http://localhost:8000/index.html QA_PDF_OUT=cv.pdf node qa-pdf.js",
     "qa-pdf-pm": "QA_VARIANT=pm QA_URL=http://localhost:8000/pm.html QA_PDF_OUT=cv-pm.pdf node qa-pdf.js",
-    "qa-pdf-all": "npm run qa-pdf-data && npm run qa-pdf-pm",
+    "qa-pdf-analytics-engineer": "QA_VARIANT=analytics-engineer QA_URL=http://localhost:8000/analytics-engineer.html QA_PDF_OUT=cv-analytics-engineer.pdf node qa-pdf.js",
+    "qa-pdf-all": "npm run qa-pdf-data && npm run qa-pdf-pm && npm run qa-pdf-analytics-engineer",
     "qa-all": "npm run qa && npm run qa-pdf-all",
     "generate-pdf": "npm run qa-pdf-all"
   },

@@ -29,6 +29,18 @@ const variants = [
         pmBullets: 4,
         analystBullets: 2,
     },
+    {
+        name: 'analytics-engineer',
+        file: 'analytics-engineer.html',
+        title: 'Jon Zisi | Analytics Engineer',
+        headline: 'Analytics Engineer | BigQuery, SQL & Airflow',
+        jobTitle: 'Analytics Engineer',
+        alt: 'Jon Zisi - Analytics Engineer based in Athens, Greece',
+        pdf: 'cv-analytics-engineer.pdf',
+        pdfName: 'jon-zisi-cv-analytics-engineer.pdf',
+        pmBullets: 2,
+        analystBullets: 4,
+    },
 ];
 
 const checks = [];

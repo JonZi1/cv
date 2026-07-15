@@ -18,6 +18,13 @@ const variants = {
         pmBullets: 4,
         analystBullets: 2,
     },
+    'analytics-engineer': {
+        url: 'http://localhost:8000/analytics-engineer.html',
+        output: 'cv-analytics-engineer.pdf',
+        headline: 'Analytics Engineer | BigQuery, SQL & Airflow',
+        pmBullets: 2,
+        analystBullets: 4,
+    },
 };
 
 const variantName = process.env.QA_VARIANT || 'data';
